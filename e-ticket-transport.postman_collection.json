@@ -8,88 +8,6 @@
 	},
 	"item": [
 		{
-			"name": "admin",
-			"item": [
-				{
-					"name": "createAdmin",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"username\":\"admin_937xerp\",\r\n    \"password\":\"R4#vE9mn2Tr!\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": "localhost:3000/admin"
-					},
-					"response": []
-				},
-				{
-					"name": "getAllAdmins",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"username\":\"admin_937xerp\",\r\n    \"password\":\"R4#vE9mn2Tr!\"\r\n}"
-						},
-						"url": "localhost:3000/admin"
-					},
-					"response": []
-				},
-				{
-					"name": "getAdminById",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"username\":\"admin_937xerp\",\r\n    \"password\":\"R4#vE9mn2Tr!\"\r\n}"
-						},
-						"url": "localhost:3000/admin/684bef9dd9b3ec3d434b6b22"
-					},
-					"response": []
-				},
-				{
-					"name": "updateAdmin",
-					"request": {
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"username\":\"admincontroller\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": "localhost:3000/admin/684bef91d9b3ec3d434b6b1f"
-					},
-					"response": []
-				},
-				{
-					"name": "deleteAdmin",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": "localhost:3000/admin/684bef91d9b3ec3d434b6b1f"
-					},
-					"response": []
-				}
-			]
-		},
-		{
 			"name": "ticket",
 			"item": [
 				{
@@ -396,6 +314,76 @@
 						"method": "GET",
 						"header": [],
 						"url": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "admin",
+			"item": [
+				{
+					"name": "signin",
+					"request": {
+						"method": "POST",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "createAdmin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"Behruz\",\r\n    \"password\":\"Behruz#.1909\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:3000/admin"
+					},
+					"response": []
+				},
+				{
+					"name": "getAllAdmins",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "getAdminById",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NTcyN2NhOTMwNWE0NWYwZGI2OGZmYyIsInJvbGUiOiJzdXBlcmFkbWluIiwiaWF0IjoxNzUwNTQ0MjA1LCJleHAiOjE3NTA2MzA2MDV9.IBRi1Ty8CyjpzsQGfIaYtLN0f5mLu5mBpV0K7oChJF4"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "localhost:3000/admin/685730c3e55d11c476623fad"
+					},
+					"response": []
+				},
+				{
+					"name": "updateAdminById",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "deleteAdminById",
+					"request": {
+						"method": "GET",
+						"header": []
 					},
 					"response": []
 				}

@@ -2,9 +2,11 @@ import Admin from '../models/admin.model.js';
 import { handleError } from '../helpers/error.handle.js';
 import { Crypto } from '../utils/encrypt-decrypt.js';
 import { successRes } from '../helpers/success.response.js'
-import { createAdminValidator, updateAdminValidator } from '../validation/admin.validation.js';
+import {createAdminValidator, updateAdminValidator } from '../validation/admin.validation.js';
 import { isValidObjectId } from 'mongoose';
+import { Token } from '../utils/token.service.js';
 
+const token = new Token()
 const crypto = new Crypto();
 
 export class AdminController {
@@ -23,12 +25,88 @@ export class AdminController {
                 username: value.username,
                 hashedPassword
             });
-            return successRes(res, admin, 201);
+           return successRes(res,admin,201)
         } catch (error) {
             return handleError(res, error);
         }
     }
+    async signin(req,res){
+    try {
+        const { value, error } = createAdminValidator(req.body);
+        if (error){
+        return handleError(res, error, 422);
+} 
 
+        const admin = await Admin.findOne({username:value.username});
+        if (!admin){
+            return handleError(res, 'Admin not found', 404);
+        } 
+
+        
+        const payload = { id: admin._id,role:admin.role }; 
+
+        const accessToken = await token.generateAccessToken(payload);
+        const refreshToken = await token.generateRefreshToken(payload);
+
+        res.cookie('refreshTokenAdmin', refreshToken, {
+            httpOnly: true,
+            secure: true,
+            maxAge: 30 * 24 * 60 * 60 * 1000
+        });
+
+        return successRes(res, {
+            data: admin,
+            token: accessToken
+        }, 201);
+    } catch (error) {
+        return handleError(res, error);
+    }
+    }
+    async newAccessToken(req, res){
+        try {
+            const refreshToken=req.cookies?.refreshTokenAdmin
+            if(!refreshToken){
+                return handleError(res,'Refresh token expired',400)
+            }
+            const decodedToken=await token.verifyToken(token,config.REFRESH_TOKEN_KEY)
+            if(!decodedToken){
+                return handleError(res,'Invalid token',400)
+            }
+            const admin= await Admin.findById(decodedToken.id)
+            if(!admin){
+                return handleError(res,'Admin not found')
+            }
+            const payload = { id: admin._id }; 
+
+        const accessToken = await token.generateAccessToken(payload);
+
+        return successRes(res, {
+            token: accessToken
+        }, 201);
+        } catch (error) {
+            return handleError(res,error)
+        }
+    }
+    async logOut(req, res){
+        try {
+            const refreshToken=req.cookies?.refreshTokenAdmin
+            if(!refreshToken){
+                return handleError(res,'Refresh token expired',400)
+            }
+            const decodedToken=await token.verifyToken(token,config.REFRESH_TOKEN_KEY)
+            if(!decodedToken){
+                return handleError(res,'Invalid token',400)
+            }
+            const admin= await Admin.findById(decodedToken.id)
+            if(!admin){
+                return handleError(res,'Admin not found')
+            }
+            res.clearCookie('refreshTokenAdmin')
+            return successRes(res,{})
+        } catch (error) {
+            return handleError(res,error)
+        }
+    }
     async getAllAdmins(_, res) {
         try {
             const admins = await Admin.find();
@@ -46,8 +124,7 @@ export class AdminController {
             return handleError(res, error);
         }
     }
-
-    async updateAdmin(req, res) {
+async updateAdmin(req, res) {
         try {
             const id = req.params.id;
             const admin = await AdminController.findAdminById(res, id);
@@ -57,7 +134,7 @@ export class AdminController {
             }
             let hashedPassword = admin.hashedPassword;
             if (value.password) {
-                hashedPassword = await crypto.encrypt(password);
+                hashedPassword = await crypto.encrypt(value.password);
             }
             const updatedAdmin = await Admin.findByIdAndUpdate(id, {
                 ...value,
