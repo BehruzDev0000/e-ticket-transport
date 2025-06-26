@@ -4,6 +4,7 @@ const TransportSchema = new Schema({
     transport_type:{type:String,required:true,enum:['avtobus','poyezd','samolyot']},
     class:{type:String,required:true,enum:['ekonom','business','premium']},
     seat:{type:Number,required:true},
+    licence_plate:{type:String,required,unique:true}
 },{
     timestamps: true,
     toJSON: { virtuals: true },
